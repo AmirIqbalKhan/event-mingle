@@ -9,9 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@event-mingle/shared": "*",
+    "@event-mingle/ui": "*",
     "chart.js": "^4.4.9",
     "next": "14.1.0",
-    "nextjs-clone": "file:",
     "react": "18.2.0",
     "react-chartjs-2": "^5.3.0",
     "react-dom": "18.2.0"

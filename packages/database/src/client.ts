@@ -1,138 +1,166 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import { eq, or, desc } from 'drizzle-orm';
-import postgres from 'postgres';
-import * as schema from './schema';
-import { DatabaseConfig, validateDatabaseConfig } from './config';
+import { PrismaClient } from '@prisma/client';
 
 export class DatabaseClient {
   private static instance: DatabaseClient;
-  private client: ReturnType<typeof drizzle>;
+  private client: PrismaClient;
 
-  private constructor(config: DatabaseConfig) {
-    const connectionString = config.url || `postgres://${config.username}:${config.password}@${config.host}:${config.port}/${config.database}`;
-    const queryClient = postgres(connectionString);
-    this.client = drizzle(queryClient, { schema });
+  private constructor() {
+    this.client = new PrismaClient();
   }
 
-  public static getInstance(env: Record<string, string | undefined>): DatabaseClient {
+  public static getInstance(): DatabaseClient {
     if (!DatabaseClient.instance) {
-      const config = validateDatabaseConfig(env);
-      DatabaseClient.instance = new DatabaseClient(config);
+      DatabaseClient.instance = new DatabaseClient();
     }
     return DatabaseClient.instance;
   }
 
-  public getClient() {
+  public getClient(): PrismaClient {
     return this.client;
   }
 
-  // User methods
-  async createUser(data: typeof schema.users.$inferInsert) {
-    return this.client.insert(schema.users).values(data).returning();
+  public async disconnect(): Promise<void> {
+    await this.client.$disconnect();
   }
 
-  async getUserById(id: number) {
-    return this.client.select().from(schema.users).where(eq(schema.users.id, id)).limit(1);
+  // User methods
+  async createUser(data: { email: string; name: string; password: string; role?: string }) {
+    return this.client.user.create({ data });
+  }
+
+  async getUserById(id: string) {
+    return this.client.user.findUnique({ where: { id } });
   }
 
   async getUserByEmail(email: string) {
-    return this.client.select().from(schema.users).where(eq(schema.users.email, email)).limit(1);
+    return this.client.user.findUnique({ where: { email } });
   }
 
-  async updateUser(id: number, data: Partial<typeof schema.users.$inferInsert>) {
-    return this.client.update(schema.users)
-      .set(data)
-      .where(eq(schema.users.id, id))
-      .returning();
+  async updateUser(id: string, data: { email?: string; name?: string; password?: string; role?: string }) {
+    return this.client.user.update({ where: { id }, data });
   }
 
   // Event methods
-  async createEvent(data: typeof schema.events.$inferInsert) {
-    return this.client.insert(schema.events).values(data).returning();
+  async createEvent(data: { 
+    title: string; 
+    description: string; 
+    startDate: Date; 
+    endDate: Date; 
+    location: string; 
+    capacity: number; 
+    price: number; 
+    organizerId: string; 
+    status?: string 
+  }) {
+    return this.client.event.create({ data });
   }
 
-  async getEventById(id: number) {
-    return this.client.select().from(schema.events).where(eq(schema.events.id, id)).limit(1);
+  async getEventById(id: string) {
+    return this.client.event.findUnique({ where: { id } });
   }
 
-  async updateEvent(id: number, data: Partial<typeof schema.events.$inferInsert>) {
-    return this.client.update(schema.events)
-      .set(data)
-      .where(eq(schema.events.id, id))
-      .returning();
+  async updateEvent(id: string, data: { 
+    title?: string; 
+    description?: string; 
+    startDate?: Date; 
+    endDate?: Date; 
+    location?: string; 
+    capacity?: number; 
+    price?: number; 
+    status?: string 
+  }) {
+    return this.client.event.update({ where: { id }, data });
   }
 
-  async deleteEvent(id: number) {
-    return this.client.delete(schema.events)
-      .where(eq(schema.events.id, id))
-      .returning();
+  async deleteEvent(id: string) {
+    return this.client.event.delete({ where: { id } });
   }
 
   // Event participant methods
-  async addParticipant(data: typeof schema.eventParticipants.$inferInsert) {
-    return this.client.insert(schema.eventParticipants).values(data).returning();
+  async addParticipant(data: { 
+    eventId: string; 
+    userId: string; 
+    status?: string; 
+    paymentStatus?: string 
+  }) {
+    return this.client.eventParticipant.create({ data });
   }
 
-  async updateParticipantStatus(id: number, status: string) {
-    return this.client.update(schema.eventParticipants)
-      .set({ status })
-      .where(eq(schema.eventParticipants.id, id))
-      .returning();
+  async updateParticipantStatus(id: string, status: string) {
+    return this.client.eventParticipant.update({ where: { id }, data: { status } });
   }
 
   // Message methods
-  async createMessage(data: typeof schema.messages.$inferInsert) {
-    return this.client.insert(schema.messages).values(data).returning();
+  async createMessage(data: { 
+    senderId: string; 
+    recipientId: string; 
+    content: string; 
+    read?: boolean 
+  }) {
+    return this.client.message.create({ data });
   }
 
-  async getMessages(userId: number) {
-    return this.client.select().from(schema.messages)
-      .where(or(
-        eq(schema.messages.senderId, userId),
-        eq(schema.messages.recipientId, userId)
-      ))
-      .orderBy(desc(schema.messages.createdAt));
+  async getMessages(userId: string) {
+    return this.client.message.findMany({
+      where: {
+        OR: [
+          { senderId: userId },
+          { recipientId: userId }
+        ]
+      },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
   // Connection methods
-  async createConnection(data: typeof schema.connections.$inferInsert) {
-    return this.client.insert(schema.connections).values(data).returning();
+  async createConnection(data: { 
+    userId1: string; 
+    userId2: string; 
+    type: string; 
+    status?: string 
+  }) {
+    return this.client.connection.create({ data });
   }
 
-  async updateConnectionStatus(id: number, status: string) {
-    return this.client.update(schema.connections)
-      .set({ status })
-      .where(eq(schema.connections.id, id))
-      .returning();
+  async updateConnectionStatus(id: string, status: string) {
+    return this.client.connection.update({ where: { id }, data: { status } });
   }
 
   // Payment methods
-  async createPayment(data: typeof schema.payments.$inferInsert) {
-    return this.client.insert(schema.payments).values(data).returning();
+  async createPayment(data: { 
+    userId: string; 
+    eventId: string; 
+    amount: number; 
+    status?: string; 
+    paymentMethod: string 
+  }) {
+    return this.client.payment.create({ data });
   }
 
-  async updatePaymentStatus(id: number, status: string) {
-    return this.client.update(schema.payments)
-      .set({ status })
-      .where(eq(schema.payments.id, id))
-      .returning();
+  async updatePaymentStatus(id: string, status: string) {
+    return this.client.payment.update({ where: { id }, data: { status } });
   }
 
   // Notification methods
-  async createNotification(data: typeof schema.notifications.$inferInsert) {
-    return this.client.insert(schema.notifications).values(data).returning();
+  async createNotification(data: { 
+    userId: string; 
+    type: string; 
+    content: string; 
+    read?: boolean 
+  }) {
+    return this.client.notification.create({ data });
   }
 
-  async getNotifications(userId: number) {
-    return this.client.select().from(schema.notifications)
-      .where(eq(schema.notifications.userId, userId))
-      .orderBy(desc(schema.notifications.createdAt));
+  async getNotifications(userId: string) {
+    return this.client.notification.findMany({
+      where: { userId },
+      orderBy: { createdAt: 'desc' }
+    });
   }
 
-  async markNotificationAsRead(id: number) {
-    return this.client.update(schema.notifications)
-      .set({ read: true })
-      .where(eq(schema.notifications.id, id))
-      .returning();
+  async markNotificationAsRead(id: string) {
+    return this.client.notification.update({ where: { id }, data: { read: true } });
   }
-} 
+}
+
+export const db = DatabaseClient.getInstance().getClient(); 

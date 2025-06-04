@@ -1,36 +1,5 @@
 {
-  "buildCommand": "yarn install && yarn build:packages && yarn build:apps",
-  "installCommand": "yarn install",
-  "framework": "nextjs",
+  "buildCommand": "yarn build",
   "outputDirectory": ".next",
-  "builds": [
-    {
-      "src": "packages/*/package.json",
-      "use": "@vercel/node",
-      "config": {
-        "buildCommand": "cd ../.. && yarn build:packages"
-      }
-    },
-    {
-      "src": "apps/event-mingle/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
-      }
-    },
-    {
-      "src": "apps/AdminDashboard/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
-      }
-    },
-    {
-      "src": "apps/EventManagerDashboard/package.json",
-      "use": "@vercel/next",
-      "config": {
-        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
-      }
-    }
-  ]
+  "framework": "nextjs"
 } 

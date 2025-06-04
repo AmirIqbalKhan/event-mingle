@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id                String              @id @default(cuid())
+  id                Int                 @id @default(autoincrement())
   email             String              @unique
   name              String
   password          String
@@ -31,7 +31,7 @@ model User {
 }
 
 model Event {
-  id              String              @id @default(cuid())
+  id              Int                 @id @default(autoincrement())
   title           String
   description     String
   startDate       DateTime            @map("start_date")
@@ -39,7 +39,7 @@ model Event {
   location        String
   capacity        Int
   price           Int
-  organizerId     String              @map("organizer_id")
+  organizerId     Int                 @map("organizer_id")
   status          String              @default("draft")
   createdAt       DateTime            @default(now()) @map("created_at")
   updatedAt       DateTime            @updatedAt @map("updated_at")
@@ -51,9 +51,9 @@ model Event {
 }
 
 model EventParticipant {
-  id            String   @id @default(cuid())
-  eventId       String   @map("event_id")
-  userId        String   @map("user_id")
+  id            Int      @id @default(autoincrement())
+  eventId       Int      @map("event_id")
+  userId        Int      @map("user_id")
   status        String   @default("invited")
   paymentStatus String   @default("pending") @map("payment_status")
   createdAt     DateTime @default(now()) @map("created_at")
@@ -65,9 +65,9 @@ model EventParticipant {
 }
 
 model Message {
-  id          String   @id @default(cuid())
-  senderId    String   @map("sender_id")
-  recipientId String   @map("recipient_id")
+  id          Int      @id @default(autoincrement())
+  senderId    Int      @map("sender_id")
+  recipientId Int      @map("recipient_id")
   content     String
   read        Boolean  @default(false)
   createdAt   DateTime @default(now()) @map("created_at")
@@ -79,9 +79,9 @@ model Message {
 }
 
 model Connection {
-  id        String   @id @default(cuid())
-  userId1   String   @map("user_id_1")
-  userId2   String   @map("user_id_2")
+  id        Int      @id @default(autoincrement())
+  userId1   Int      @map("user_id_1")
+  userId2   Int      @map("user_id_2")
   type      String
   status    String   @default("pending")
   createdAt DateTime @default(now()) @map("created_at")
@@ -93,9 +93,9 @@ model Connection {
 }
 
 model Payment {
-  id            String   @id @default(cuid())
-  userId        String   @map("user_id")
-  eventId       String   @map("event_id")
+  id            Int      @id @default(autoincrement())
+  userId        Int      @map("user_id")
+  eventId       Int      @map("event_id")
   amount        Int
   status        String   @default("pending")
   paymentMethod String   @map("payment_method")
@@ -108,8 +108,8 @@ model Payment {
 }
 
 model Notification {
-  id        String   @id @default(cuid())
-  userId    String   @map("user_id")
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
   type      String
   content   String
   read      Boolean  @default(false)

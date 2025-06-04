@@ -1,37 +1,40 @@
 {
   "name": "@event-mingle/ui",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "sideEffects": false,
-  "license": "MIT",
   "scripts": {
-    "build": "tsup src/index.tsx --format esm,cjs --dts --external react",
-    "dev": "tsup src/index.tsx --format esm,cjs --watch --dts --external react",
-    "lint": "eslint \"src/**/*.ts*\"",
-    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist"
-  },
-  "devDependencies": {
-    "@event-mingle/config": "*",
-    "@types/react": "^18.2.0",
-    "@types/react-dom": "^18.2.0",
-    "eslint": "^8.57.0",
-    "react": "^18.2.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "build": "tsup",
+    "clean": "rimraf .turbo node_modules dist",
+    "dev": "tsup --watch",
+    "format": "prettier --check . --ignore-path ../../.gitignore",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@radix-ui/react-dropdown-menu": "^2.0.6",
+    "@event-mingle/shared": "*",
+    "@event-mingle/types": "*",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.344.0",
+    "next-themes": "^0.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },
-  "peerDependencies": {
-    "@event-mingle/shared": "*",
-    "@event-mingle/config": "*"
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "postcss": "^8",
+    "rimraf": "^5.0.5",
+    "tailwindcss": "^3.3.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5"
   }
 }
