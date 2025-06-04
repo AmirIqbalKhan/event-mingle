@@ -13,8 +13,7 @@
     "lint": "yarn workspaces run lint",
     "clean": "yarn workspaces run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "prisma:generate": "yarn workspace @event-mingle/database prisma generate",
-    "postinstall": "yarn prisma:generate"
+    "prisma:generate": "yarn workspace @event-mingle/database prisma generate"
   },
   "devDependencies": {
     "prettier": "^3.0.0"

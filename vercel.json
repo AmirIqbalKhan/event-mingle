@@ -1,5 +1,6 @@
 {
-  "buildCommand": "yarn prisma:generate && yarn build",
+  "buildCommand": "yarn install && yarn workspace @event-mingle/database prisma generate && yarn build",
   "outputDirectory": ".next",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "installCommand": "yarn install"
 } 
