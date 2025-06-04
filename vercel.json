@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build",
+  "buildCommand": "cd packages/database && yarn db:generate && cd ../.. && yarn build",
   "outputDirectory": ".next",
   "framework": "nextjs"
 } 
