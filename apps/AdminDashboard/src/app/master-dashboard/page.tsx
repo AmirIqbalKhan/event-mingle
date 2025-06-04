@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { Line, Bar, Doughnut, Pie } from 'react-chartjs-2';
 import { Chart, registerables } from 'chart.js';
+import { Card, Button } from '@event-mingle/ui';
 
 Chart.register(...registerables);
 
@@ -125,7 +126,7 @@ const MasterDashboard = () => {
         {/* Stat Cards Row */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {statCards.map((card, idx) => (
-            <div key={idx} className={`relative ${card.color} ${card.border} border rounded-2xl shadow-lg group p-6 flex flex-col justify-between min-h-[160px] transition-all duration-200 hover:shadow-2xl`}>
+            <Card key={idx} className={`relative ${card.color} ${card.border} border rounded-2xl shadow-lg group p-6 flex flex-col justify-between min-h-[160px] transition-all duration-200 hover:shadow-2xl`}>
               <div className="mb-6">
                 <div className="text-xs font-bold text-gray-500 mb-1 tracking-wider">{card.title}</div>
                 <div className="text-3xl font-extrabold text-gray-800 mb-1">{card.value}</div>
@@ -156,13 +157,13 @@ const MasterDashboard = () => {
                   height={48}
                 />
               </div>
-            </div>
+            </Card>
           ))}
         </div>
         {/* Widgets Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           {/* Top Products Bar Chart */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6">
+          <Card className="p-6">
             <div className="font-bold text-lg mb-2">Top Products</div>
             <div className="h-56">
               <Bar
@@ -178,9 +179,9 @@ const MasterDashboard = () => {
                 }}
               />
             </div>
-          </div>
+          </Card>
           {/* Referrals */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between">
+          <Card className="p-6 flex flex-col justify-between">
             <div>
               <div className="font-bold text-lg mb-2">Referrals</div>
               {referrals.map((ref, idx) => (
@@ -195,109 +196,111 @@ const MasterDashboard = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </Card>
           {/* Total Revenue Gauge */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col items-center justify-center">
+          <Card className="p-6 flex flex-col items-center justify-center">
             <div className="font-bold text-lg mb-2">Total Revenue</div>
-            <div className="text-2xl font-extrabold mb-1">Total Sale</div>
-            <div className="text-3xl font-bold text-gray-800 mb-2">{totalSale}</div>
-            <div className="w-32 h-32 relative flex items-center justify-center">
+            <div className="relative w-32 h-32">
               <Doughnut
                 data={{
-                  labels: ['Revenue', 'Remainder'],
+                  labels: ['Revenue'],
                   datasets: [
                     {
                       data: [totalRevenue, 100 - totalRevenue],
-                      backgroundColor: ['#6366f1', '#e5e7eb'],
+                      backgroundColor: ['#22c55e', '#f3f4f6'],
                       borderWidth: 0,
                     },
                   ],
                 }}
                 options={{
                   cutout: '80%',
-                  plugins: { legend: { display: false }, tooltip: { enabled: false } },
+                  plugins: { legend: { display: false } },
+                  responsive: true,
+                  maintainAspectRatio: false,
                 }}
               />
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-indigo-600">
-                {totalRevenue}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="text-2xl font-bold text-gray-800">{totalRevenue}%</div>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
-        {/* More Details Row */}
-        <div className="flex flex-col items-center gap-6">
-          {/* Recent Activity */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col justify-between w-full max-w-3xl hover:shadow-2xl transition-all">
+        {/* Recent Activity */}
+        <Card className="mb-8">
+          <div className="p-6">
             <div className="font-bold text-lg mb-4">Recent Activity</div>
-            <ul className="divide-y divide-gray-100">
-              {recentActivity.map((item, idx) => (
-                <li key={idx} className="py-3 flex items-center space-x-3">
-                  <span className={`w-9 h-9 flex items-center justify-center rounded-full text-white font-bold text-lg ${item.color}`}>{item.user[0]}</span>
+            <div className="space-y-4">
+              {recentActivity.map((activity, idx) => (
+                <div key={idx} className="flex items-center">
+                  <div className={`w-2 h-2 rounded-full ${activity.color} mr-3`}></div>
                   <div className="flex-1">
-                    <span className="font-semibold text-gray-700 block">{item.user}</span>
-                    <span className="text-gray-500 text-sm block">{item.action}</span>
+                    <div className="text-sm font-medium text-gray-800">{activity.user}</div>
+                    <div className="text-xs text-gray-500">{activity.action}</div>
                   </div>
-                  <span className="text-xs text-gray-400 whitespace-nowrap">{item.time}</span>
-                </li>
+                  <div className="text-xs text-gray-500">{activity.time}</div>
+                </div>
               ))}
-            </ul>
-          </div>
-          {/* Tasks Overview Pie Chart */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col justify-center w-full max-w-3xl hover:shadow-2xl transition-all">
-            <div className="font-bold text-lg mb-4">Tasks Overview</div>
-            <div className="flex flex-col items-center w-full">
-              <div className="w-32 h-32 mb-4">
-                <Pie
-                  data={tasksOverviewData}
-                  options={{
-                    plugins: { legend: { display: false }, tooltip: { enabled: true } },
-                    responsive: true,
-                    maintainAspectRatio: false,
-                  }}
-                />
-              </div>
-              <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 w-full">
-                <div className="flex items-center text-sm"><span className="w-4 h-4 rounded-full bg-green-500 mr-2"></span>Completed</div>
-                <div className="flex items-center text-sm"><span className="w-4 h-4 rounded-full bg-yellow-400 mr-2"></span>In Progress</div>
-                <div className="flex items-center text-sm"><span className="w-4 h-4 rounded-full bg-red-500 mr-2"></span>Pending</div>
-              </div>
             </div>
           </div>
-          {/* System Status */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 flex flex-col justify-center w-full max-w-3xl hover:shadow-2xl transition-all">
-            <div className="font-bold text-lg mb-4">System Status</div>
-            <ul className="space-y-4">
-              {systemStatus.map((item, idx) => (
-                <li key={idx} className="flex items-center space-x-3">
-                  <span className={`w-4 h-4 rounded-full ${item.color} border-2 border-white shadow`}></span>
-                  <span className="font-medium text-gray-700">{item.label}:</span>
-                  <span className={`font-bold ${item.text}`}>{item.status}</span>
-                </li>
-              ))}
-            </ul>
+        </Card>
+        {/* Tasks Overview */}
+        <Card className="mb-8">
+          <div className="p-6">
+            <div className="font-bold text-lg mb-4">Tasks Overview</div>
+            <div className="h-64">
+              <Pie
+                data={tasksOverviewData}
+                options={{
+                  plugins: { legend: { display: true, position: 'bottom' } },
+                  responsive: true,
+                  maintainAspectRatio: false,
+                }}
+              />
+            </div>
           </div>
-          {/* User Table */}
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 min-h-[320px] hover:shadow-2xl transition-all flex flex-col w-full max-w-3xl">
-            <div className="font-bold text-lg mb-4">Recent Users</div>
+        </Card>
+        {/* System Status */}
+        <Card className="mb-8">
+          <div className="p-6">
+            <div className="font-bold text-lg mb-4">System Status</div>
+            <div className="grid grid-cols-3 gap-4">
+              {systemStatus.map((status, idx) => (
+                <div key={idx} className="text-center">
+                  <div className={`w-3 h-3 rounded-full ${status.color} mx-auto mb-2`}></div>
+                  <div className="text-sm font-medium text-gray-800">{status.label}</div>
+                  <div className={`text-xs ${status.text}`}>{status.status}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Card>
+        {/* Users Table */}
+        <Card>
+          <div className="p-6">
+            <div className="font-bold text-lg mb-4">Users</div>
             <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
+              <table className="min-w-full">
                 <thead>
-                  <tr className="text-left text-gray-500">
-                    <th className="pb-2">User</th>
-                    <th className="pb-2">Email</th>
-                    <th className="pb-2">Role</th>
+                  <tr className="text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-2">Name</th>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">Role</th>
                   </tr>
                 </thead>
                 <tbody>
                   {usersTable.map((user, idx) => (
-                    <tr key={idx} className="border-t border-gray-100 hover:bg-gray-50 transition-all">
-                      <td className="py-2 flex items-center space-x-2">
-                        <span className={`w-8 h-8 flex items-center justify-center rounded-full text-white font-bold text-base ${user.color}`}>{user.name[0]}</span>
-                        <span className="font-medium text-gray-700">{user.name}</span>
+                    <tr key={idx} className="border-t">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center">
+                          <div className={`w-2 h-2 rounded-full ${user.color} mr-2`}></div>
+                          <span className="text-sm font-medium text-gray-800">{user.name}</span>
+                        </div>
                       </td>
-                      <td className="py-2 text-gray-500">{user.email}</td>
-                      <td className="py-2">
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${roleBadge(user.role)}`}>{user.role}</span>
+                      <td className="px-4 py-3 text-sm text-gray-500">{user.email}</td>
+                      <td className="px-4 py-3">
+                        <span className={`text-xs px-2 py-1 rounded-full ${roleBadge(user.role)}`}>
+                          {user.role}
+                        </span>
                       </td>
                     </tr>
                   ))}
@@ -305,7 +308,7 @@ const MasterDashboard = () => {
               </table>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
     </>
   );

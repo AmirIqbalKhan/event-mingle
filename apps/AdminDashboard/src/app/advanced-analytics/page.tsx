@@ -7,6 +7,7 @@ import {
   registerables
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
+import { Card } from '@event-mingle/ui';
 
 Chart.register(...registerables);
 
@@ -56,24 +57,24 @@ const AdvancedAnalytics = () => {
       </Head>
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-6">Advanced Analytics</h1>
-        <div className="bg-white p-4 rounded-lg shadow">
+        <Card className="p-4">
           <h2 className="text-lg font-semibold mb-4">Real-Time Analytics</h2>
           <div className="h-64">
             <Line data={realTimeData} options={{ maintainAspectRatio: false }} />
           </div>
-        </div>
-        <div className="mt-6 bg-white p-4 rounded-lg shadow">
+        </Card>
+        <Card className="mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Cohort Analysis</h2>
           <div className="h-64">
             <Bar data={cohortData} options={{ maintainAspectRatio: false }} />
           </div>
-        </div>
-        <div className="mt-6 bg-white p-4 rounded-lg shadow">
+        </Card>
+        <Card className="mt-6 p-4">
           <h2 className="text-lg font-semibold mb-4">Trend Reporting</h2>
           <div className="h-64">
             <Line data={trendData} options={{ maintainAspectRatio: false }} />
           </div>
-        </div>
+        </Card>
       </div>
     </>
   );
