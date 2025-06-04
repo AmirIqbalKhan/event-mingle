@@ -15,21 +15,21 @@
       "src": "apps/event-mingle/package.json",
       "use": "@vercel/next",
       "config": {
-        "buildCommand": "cd ../.. && yarn build:apps"
+        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
       }
     },
     {
       "src": "apps/AdminDashboard/package.json",
       "use": "@vercel/next",
       "config": {
-        "buildCommand": "cd ../.. && yarn build:apps"
+        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
       }
     },
     {
       "src": "apps/EventManagerDashboard/package.json",
       "use": "@vercel/next",
       "config": {
-        "buildCommand": "cd ../.. && yarn build:apps"
+        "buildCommand": "cd ../.. && yarn build:packages && yarn build:apps"
       }
     }
   ]
