@@ -1,9 +1,16 @@
+'use client';
+
 import React from 'react';
+import { Metadata } from 'next';
 import Head from 'next/head';
+
+export const metadata: Metadata = {
+  title: 'EventMingle Admin Dashboard',
+};
 
 const AdminPanel = () => {
   return (
-    <div>
+    <div className="bg-gray-100">
       <Head>
         <title>EventMingle Admin Dashboard</title>
         <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
@@ -203,6 +210,11 @@ const AdminPanel = () => {
               Content Moderation
             </a>
           </nav>
+        </div>
+
+        {/* Main Content */}
+        <div className="main-content">
+          {/* Add your main content here */}
         </div>
       </body>
     </div>
