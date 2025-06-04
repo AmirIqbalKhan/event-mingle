@@ -6,17 +6,14 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "turbo run build",
-    "build:packages": "turbo run build --filter=./packages/*",
-    "build:apps": "turbo run build --filter=./apps/*",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "clean": "turbo run clean && rm -rf node_modules",
+    "build": "yarn workspaces run build",
+    "dev": "yarn workspaces run dev",
+    "lint": "yarn workspaces run lint",
+    "clean": "yarn workspaces run clean && rm -rf node_modules",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "prettier": "^3.0.0",
-    "turbo": "^1.10.0"
+    "prettier": "^3.0.0"
   },
   "packageManager": "yarn@1.22.19"
 }
