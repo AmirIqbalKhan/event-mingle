@@ -1,0 +1,20 @@
+{
+  "buildCommand": "yarn build",
+  "installCommand": "yarn install",
+  "framework": "nextjs",
+  "outputDirectory": ".next",
+  "builds": [
+    {
+      "src": "apps/event-mingle/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "apps/AdminDashboard/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "apps/EventManagerDashboard/package.json",
+      "use": "@vercel/next"
+    }
+  ]
+} 

@@ -1,36 +1,22 @@
 {
-  "name": "event-mingle",
-  "version": "0.0.1",
+  "name": "event-mingle-monorepo",
   "private": true,
   "workspaces": [
     "apps/*",
     "packages/*"
   ],
   "scripts": {
-    "dev": "turbo run dev",
     "build": "turbo run build",
-    "test": "turbo run test",
+    "build:packages": "turbo run build --filter=./packages/*",
+    "build:apps": "turbo run build --filter=./apps/*",
+    "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build:packages": "tsc -b tsconfig.build.json",
-    "clean": "turbo run clean",
-    "db:generate": "turbo run db:generate",
-    "db:push": "turbo run db:push"
+    "clean": "turbo run clean && rm -rf node_modules",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "eslint": "^8.0.0",
     "prettier": "^3.0.0",
-    "turbo": "^1.10.0",
-    "typescript": "^5.0.0"
+    "turbo": "^1.10.0"
   },
-  "engines": {
-    "node": ">=18.0.0"
-  },
-  "packageManager": "yarn@1.22.19",
-  "dependencies": {
-    "event-mingle-monorepo": "file:"
-  }
+  "packageManager": "yarn@1.22.19"
 }
