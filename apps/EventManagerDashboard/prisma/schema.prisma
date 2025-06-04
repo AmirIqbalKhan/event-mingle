@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// This Prisma schema uses PostgreSQL as the provider
+// You can update the DATABASE_URL in .env for Neon later
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  date        DateTime
+  venue       String?
+  tickets     Ticket[]
+  tasks       Task[]
+  resources   Resource[]
+  payments    Payment[]
+  communications Communication[]
+  transactions Transaction[]
+  analytics   Analytics[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  company   String?
+  tickets   Ticket[]
+  payments  Payment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Ticket {
+  id        String   @id @default(uuid())
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+  client    Client?  @relation(fields: [clientId], references: [id])
+  clientId  String?
+  price     Float
+  status    String   // e.g. 'sold', 'reserved', 'cancelled'
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Staff {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  role      String
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Venue {
+  id        String   @id @default(uuid())
+  name      String
+  address   String?
+  capacity  Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  // Add more fields as needed
+}
+
+model Task {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  status      String   // e.g., 'todo', 'in_progress', 'done'
+  dueDate     DateTime?
+  assignedTo  String?  // Staff ID
+  eventId     String?  // Event ID
+  event       Event?   @relation(fields: [eventId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Workflow {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  status      String   // e.g., 'active', 'inactive'
+  steps       Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Resource {
+  id        String   @id @default(uuid())
+  name      String
+  type      String
+  quantity  Int
+  status    String
+  eventId   String?
+  event     Event?   @relation(fields: [eventId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  amount    Float
+  status    String
+  method    String
+  eventId   String?
+  event     Event?   @relation(fields: [eventId], references: [id])
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Integration {
+  id        String   @id @default(uuid())
+  name      String
+  type      String
+  config    Json?
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Communication {
+  id        String   @id @default(uuid())
+  type      String
+  subject   String?
+  message   String
+  recipient String
+  eventId   String?
+  event     Event?   @relation(fields: [eventId], references: [id])
+  sentAt    DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Transaction {
+  id          String   @id @default(uuid())
+  type        String
+  amount      Float
+  description String?
+  eventId     String?
+  event       Event?   @relation(fields: [eventId], references: [id])
+  date        DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Analytics {
+  id         String   @id @default(uuid())
+  eventId    String?
+  event      Event?   @relation(fields: [eventId], references: [id])
+  metric     String
+  value      Float
+  recordedAt DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}

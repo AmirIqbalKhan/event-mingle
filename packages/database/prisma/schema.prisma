@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  password      String
+  avatar        String?
+  bio           String?
+  interests     String[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  events        Event[]   @relation("EventOrganizer")
+  attending     Event[]   @relation("EventAttendees")
+  likedEvents   Event[]   @relation("EventLikes")
+  matches       Match[]   @relation("UserMatches")
+  matchedWith   Match[]   @relation("MatchedWith")
+  chats         Chat[]    @relation("ChatParticipants")
+  messages      Message[]
+  preferences   UserPreferences?
+  notifications Notification[]
+}
+
+model UserPreferences {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  user              User     @relation(fields: [userId], references: [id])
+  preferredCategories String[]
+  maxDistance       Int?
+  priceRange        String?
+  ageRange          String?
+  notificationSettings Json
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  date        DateTime
+  location    Json
+  images      String[]
+  category    String
+  price       Float
+  capacity    Int
+  organizerId String
+  organizer   User      @relation("EventOrganizer", fields: [organizerId], references: [id])
+  attendees   User[]    @relation("EventAttendees")
+  likes       User[]    @relation("EventLikes")
+  chats       Chat[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Chat {
+  id        String    @id @default(cuid())
+  type      String    // 'direct' or 'group'
+  name      String?
+  users     User[]    @relation("ChatParticipants")
+  messages  Message[]
+  eventId   String?
+  event     Event?    @relation(fields: [eventId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Match {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation("UserMatches", fields: [userId], references: [id])
+  matchedWithId String
+  matchedWith User     @relation("MatchedWith", fields: [matchedWithId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  type      String
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+} 
