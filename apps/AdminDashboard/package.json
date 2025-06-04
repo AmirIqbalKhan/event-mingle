@@ -1,16 +1,18 @@
 {
-  "name": "nextjs-clone",
+  "name": "@event-mingle/admin-dashboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rm -rf .next node_modules"
   },
   "dependencies": {
     "@event-mingle/shared": "*",
     "@event-mingle/ui": "*",
+    "@event-mingle/config": "*",
     "chart.js": "^4.4.9",
     "next": "14.1.0",
     "react": "18.2.0",
