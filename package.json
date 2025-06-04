@@ -17,5 +17,11 @@
   "devDependencies": {
     "prettier": "^3.0.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "resolutions": {
+    "@event-mingle/database": "workspace:*",
+    "@event-mingle/shared": "workspace:*",
+    "@event-mingle/ui": "workspace:*",
+    "@event-mingle/config": "workspace:*"
+  }
 }
