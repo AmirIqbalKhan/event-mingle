@@ -6,9 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build:packages": "yarn workspaces --filter \"@event-mingle/*\" run build",
-    "build:apps": "yarn workspaces --filter \"!@event-mingle/*\" run build",
-    "build": "yarn build:packages && yarn build:apps",
+    "build": "yarn workspaces run build",
     "dev": "yarn workspaces run dev",
     "lint": "yarn workspaces run lint",
     "clean": "yarn workspaces run clean && rm -rf node_modules",
@@ -18,5 +16,8 @@
   "devDependencies": {
     "prettier": "^3.0.0"
   },
-  "packageManager": "yarn@1.22.19"
+  "packageManager": "yarn@1.22.19",
+  "dependencies": {
+    "event-mingle-monorepo": "file:"
+  }
 }
