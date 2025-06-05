@@ -16,8 +16,5 @@
   "devDependencies": {
     "prettier": "^3.0.0"
   },
-  "packageManager": "yarn@1.22.19",
-  "dependencies": {
-    "event-mingle-monorepo": "file:"
-  }
+  "packageManager": "yarn@1.22.19"
 }
