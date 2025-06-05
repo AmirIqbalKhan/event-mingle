@@ -24,7 +24,8 @@
     "react-dom": "^18.2.0",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
-    "tsup": "^8.0.2"
+    "tsup": "^8.0.2",
+    "typescript": "^5"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -34,7 +35,6 @@
     "eslint": "^8",
     "postcss": "^8",
     "rimraf": "^5.0.5",
-    "tailwindcss": "^3.3.0",
-    "typescript": "^5"
+    "tailwindcss": "^3.3.0"
   }
 }
