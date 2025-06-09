@@ -6,8 +6,6 @@
     "module": "esnext",
     "declaration": true,
     "sourceMap": true,
-    "noEmit": false,
-    "composite": true,
     "jsx": "react-jsx"
   },
   "include": ["src/**/*"],

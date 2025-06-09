@@ -1,3 +1,5 @@
+// This file is now managed by Prisma. See prisma/schema.prisma for the data model.
+
 import { pgTable, serial, text, timestamp, integer, boolean, json } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 

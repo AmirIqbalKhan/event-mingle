@@ -34,10 +34,22 @@ model Event {
   updatedAt   DateTime @updatedAt
 }
 
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  staff     Staff?
+  client    Client?
+}
+
 model Client {
   id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
   phone     String?
   company   String?
   tickets   Ticket[]
@@ -60,9 +72,8 @@ model Ticket {
 
 model Staff {
   id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  role      String
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
   phone     String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

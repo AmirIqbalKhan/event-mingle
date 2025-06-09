@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/db';
 import { authOptions } from '@/lib/auth';
 
 export async function GET() {
@@ -60,7 +60,7 @@ export async function GET() {
     });
 
     // Format the response
-    const formattedEvents = recommendedEvents.map((event) => ({
+    const formattedEvents = recommendedEvents.map((event: any) => ({
       id: event.id,
       title: event.title,
       description: event.description,

@@ -4,22 +4,6 @@
 
 EventMingle is a cutting-edge social event management platform that leverages AI and intelligent design to create personalized event experiences and meaningful social connections.
 
-### Tech Stack
-- TypeScript (Full-stack)
-- Node.js
-- Vite
-- Tailwind CSS
-- Drizzle ORM
-- PostgreSQL Database
-- React
-- Framer Motion
-- Stripe Payment Integration
-- Mobile App Support (Capacitor)
-- Containerization (Docker)
-- Comprehensive Testing Infrastructure
-- CI/CD Workflows
-- Google Calendar API Integration
-- Device Calendar Synchronization
 
 ## Core Components
 

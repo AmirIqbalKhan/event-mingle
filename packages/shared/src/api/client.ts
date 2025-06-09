@@ -1,3 +1,4 @@
+// SERVER ONLY: Do not import this file in client components.
 import axios, { AxiosInstance } from 'axios';
 import { ApiResponse } from '../types';
 

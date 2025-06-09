@@ -49,7 +49,18 @@ export default function EventCalendarPage({ params }: { params: { id: string } }
         <h1 className="text-3xl font-bold text-gray-900 mb-8">
           Calendar Settings - {event.title}
         </h1>
-        <CalendarIntegration event={event} onSync={handleSync} />
+        <CalendarIntegration
+          event={{
+            ...event,
+            startDate: event.startDate.toISOString(),
+            endDate: event.endDate.toISOString(),
+            reminder: event.reminder || { type: 'email', time: 15 },
+          }}
+          onUpdate={(updatedEvent) => {
+            // You can handle updates to the event here if needed
+            console.log('Updated event:', updatedEvent);
+          }}
+        />
       </div>
     </div>
   );

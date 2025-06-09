@@ -1,11 +1,22 @@
 import { PrismaClient } from '@prisma/client';
 
+let prisma: PrismaClient;
+
+if (process.env.NODE_ENV === 'production') {
+  prisma = new PrismaClient();
+} else {
+  if (!(global as any).prisma) {
+    (global as any).prisma = new PrismaClient();
+  }
+  prisma = (global as any).prisma;
+}
+
 export class DatabaseClient {
   private static instance: DatabaseClient;
   private client: PrismaClient;
 
   private constructor() {
-    this.client = new PrismaClient();
+    this.client = prisma;
   }
 
   public static getInstance(): DatabaseClient {
@@ -163,4 +174,5 @@ export class DatabaseClient {
   }
 }
 
+// Export a singleton instance of the PrismaClient
 export const db = DatabaseClient.getInstance().getClient(); 

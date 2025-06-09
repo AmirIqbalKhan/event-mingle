@@ -1,6 +1,6 @@
 import NextAuth, { AuthOptions, Session, User } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { prisma } from '@/lib/db';
+import { db } from '@/lib/db';
 import { compare } from 'bcryptjs';
 import { JWT } from 'next-auth/jwt';
 
@@ -14,36 +14,44 @@ export const authOptions: AuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null;
+          throw new Error('Email and password are required');
         }
 
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email }
-        });
+        try {
+          const user = await db.user.findUnique({
+            where: { email: credentials.email }
+          });
 
-        if (!user) {
-          return null;
+          if (!user) {
+            throw new Error('No user found with this email');
+          }
+
+          const isPasswordValid = await compare(credentials.password, user.password);
+
+          if (!isPasswordValid) {
+            throw new Error('Invalid password');
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          throw error;
         }
-
-        const isPasswordValid = await compare(credentials.password, user.password);
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        };
       }
     })
   ],
   session: {
-    strategy: 'jwt' as const
+    strategy: 'jwt' as const,
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: '/auth/signin',
+    error: '/auth/error',
   },
   callbacks: {
     async session({ session, token }: { session: Session; token: JWT }) {
@@ -51,6 +59,7 @@ export const authOptions: AuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
+        session.user.role = token.role as string;
       }
       return session;
     },
@@ -59,6 +68,7 @@ export const authOptions: AuthOptions = {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.role = user.role;
       }
       return token;
     }

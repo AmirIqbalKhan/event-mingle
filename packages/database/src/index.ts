@@ -1,4 +1,3 @@
-export * from './schema';
-export * from './client';
 export * from './config';
-export * from './operations'; 
+export * from './operations';
+export { db } from './client'; 

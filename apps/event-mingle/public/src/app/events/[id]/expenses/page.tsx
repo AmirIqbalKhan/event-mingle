@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import CostSplitting from '@/components/Events/CostSplitting';
+import CostSplitting from '../../../../components/Events/CostSplitting';
 
 interface Attendee {
   id: string;

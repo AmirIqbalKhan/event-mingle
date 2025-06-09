@@ -73,7 +73,7 @@ export default function CostSplitting({ attendees, onAddExpense, onSettlePayment
     setError(null);
 
     try {
-      await onAddExpense(newExpense);
+      await onAddExpense({ ...newExpense, status: 'pending' });
       setNewExpense({
         description: '',
         amount: 0,

@@ -1,6 +1,6 @@
 import { DatabaseClient } from './client';
 import { DatabaseConfig, validateDatabaseConfig } from './config';
-import * as schema from './schema';
+import { Prisma, User, Event, Message, Notification, Payment, Connection, EventParticipant } from '@prisma/client';
 
 let db: DatabaseClient | null = null;
 
@@ -22,11 +22,11 @@ export class DatabaseOperations {
   constructor(private readonly db: DatabaseClient) {}
 
   // User operations
-  async createUser(data: typeof schema.users.$inferInsert) {
+  async createUser(data: Prisma.UserCreateInput) {
     return this.db.createUser(data);
   }
 
-  async findUserById(id: number) {
+  async findUserById(id: string) {
     return this.db.getUserById(id);
   }
 
@@ -34,46 +34,46 @@ export class DatabaseOperations {
     return this.db.getUserByEmail(email);
   }
 
-  async updateUser(id: number, data: Partial<typeof schema.users.$inferInsert>) {
+  async updateUser(id: string, data: Prisma.UserUpdateInput) {
     return this.db.updateUser(id, data);
   }
 
   // Event operations
-  async createEvent(data: typeof schema.events.$inferInsert) {
+  async createEvent(data: Prisma.EventCreateInput) {
     return this.db.createEvent(data);
   }
 
-  async findEventById(id: number) {
+  async findEventById(id: string) {
     return this.db.getEventById(id);
   }
 
-  async updateEvent(id: number, data: Partial<typeof schema.events.$inferInsert>) {
+  async updateEvent(id: string, data: Prisma.EventUpdateInput) {
     return this.db.updateEvent(id, data);
   }
 
-  async deleteEvent(id: number) {
+  async deleteEvent(id: string) {
     return this.db.deleteEvent(id);
   }
 
   // Message operations
-  async createMessage(data: typeof schema.messages.$inferInsert) {
+  async createMessage(data: Prisma.MessageCreateInput) {
     return this.db.createMessage(data);
   }
 
-  async findMessagesByUser(userId: number) {
+  async findMessagesByUser(userId: string) {
     return this.db.getMessages(userId);
   }
 
   // Notification operations
-  async createNotification(data: typeof schema.notifications.$inferInsert) {
+  async createNotification(data: Prisma.NotificationCreateInput) {
     return this.db.createNotification(data);
   }
 
-  async findNotificationsByUser(userId: number) {
+  async findNotificationsByUser(userId: string) {
     return this.db.getNotifications(userId);
   }
 
-  async markNotificationAsRead(id: number) {
+  async markNotificationAsRead(id: string) {
     return this.db.markNotificationAsRead(id);
   }
 }

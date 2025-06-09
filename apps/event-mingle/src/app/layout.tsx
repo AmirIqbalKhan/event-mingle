@@ -1,15 +1,31 @@
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import './globals.css';
-import { Providers } from './providers';
-import Navigation from '@/components/Navigation';
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Navbar } from "@/components/Layout/navbar";
+import { Footer } from "@/components/Layout/footer";
+import { prisma } from "@/lib/db";
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Event Mingle',
-  description: 'Connect with events and people',
+  title: "EventMingle - Connect at Events",
+  description: "Discover, chat, and split costs with friends at the best events around you.",
 };
+
+// Initialize database connection
+async function initializeDatabase() {
+  try {
+    await prisma.$connect();
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Failed to connect to database:', error instanceof Error ? error.message : 'Unknown error');
+    throw error; // Re-throw to prevent the app from starting with a broken database connection
+  }
+}
+
+// Call the initialization function
+initializeDatabase();
 
 export default function RootLayout({
   children,
@@ -17,16 +33,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Providers>
-          <div className="min-h-screen bg-gray-100">
-            <Navigation />
-            <main className="pt-16 pb-20 md:pt-20">
-              {children}
-            </main>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
           </div>
-        </Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

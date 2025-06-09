@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
-import { ApiClient } from '../api/client';
 
 interface AuthContextType {
   user: User | null;
@@ -19,7 +18,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const api = ApiClient.getInstance(process.env.NEXT_PUBLIC_API_URL || '');
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
   useEffect(() => {
     checkAuth();
@@ -29,9 +28,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const token = localStorage.getItem('token');
       if (token) {
-        const response = await api.getProfile();
-        if (response.success && response.data) {
-          setUser(response.data);
+        const response = await fetch(`${API_URL}/api/users/profile`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        const data = await response.json();
+        if (data.success && data.data) {
+          setUser(data.data);
         } else {
           localStorage.removeItem('token');
         }
@@ -48,12 +50,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       setError(null);
-      const response = await api.login({ email, password });
-      if (response.success && response.data) {
-        localStorage.setItem('token', response.data.token);
-        setUser(response.data.user);
+      const response = await fetch(`${API_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (data.success && data.data) {
+        localStorage.setItem('token', data.data.token);
+        setUser(data.data.user);
       } else {
-        setError(response.error || 'Login failed');
+        setError(data.error || 'Login failed');
       }
     } catch (err) {
       setError('Login failed. Please try again.');
@@ -72,12 +79,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       setError(null);
-      const response = await api.register(userData);
-      if (response.success && response.data) {
-        localStorage.setItem('token', response.data.token);
-        setUser(response.data.user);
+      const response = await fetch(`${API_URL}/api/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      if (data.success && data.data) {
+        localStorage.setItem('token', data.data.token);
+        setUser(data.data.user);
       } else {
-        setError(response.error || 'Registration failed');
+        setError(data.error || 'Registration failed');
       }
     } catch (err) {
       setError('Registration failed. Please try again.');
@@ -91,11 +103,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       setLoading(true);
       setError(null);
-      const response = await api.updateProfile(userData);
-      if (response.success && response.data) {
-        setUser(response.data);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_URL}/api/users/profile`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(userData),
+      });
+      const data = await response.json();
+      if (data.success && data.data) {
+        setUser(data.data);
       } else {
-        setError(response.error || 'Profile update failed');
+        setError(data.error || 'Profile update failed');
       }
     } catch (err) {
       setError('Profile update failed. Please try again.');

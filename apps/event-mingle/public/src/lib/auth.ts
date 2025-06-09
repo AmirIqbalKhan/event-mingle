@@ -1,5 +1,5 @@
 import { NextAuthOptions } from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import bcrypt from 'bcryptjs';
@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.name = token.name;
         session.user.email = token.email;
-        session.user.image = token.picture;
+        session.user.image = token.picture ?? undefined;
       }
 
       return session;

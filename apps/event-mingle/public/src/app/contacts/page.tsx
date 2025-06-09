@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import ContactInvitation from '@/components/Contacts/ContactInvitation';
+import ContactInvitation from '../../../../src/components/Contacts/ContactInvitation';
 
 export default function ContactsPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,9 +53,9 @@ export default function ContactsPage() {
       <div className="max-w-3xl mx-auto">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Contacts</h1>
         <ContactInvitation
-          onSendInvitation={handleSendInvitation}
-          onAcceptInvitation={handleAcceptInvitation}
-          onRejectInvitation={handleRejectInvitation}
+          onInvite={handleSendInvitation}
+          onAccept={handleAcceptInvitation}
+          onReject={handleRejectInvitation}
         />
       </div>
     </div>
